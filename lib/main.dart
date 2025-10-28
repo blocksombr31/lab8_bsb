@@ -43,6 +43,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   // tell the compiler we will give the tab controller a value
   late TabController _tabController;
 
+  // create a global key with random user so we can call functions there from here
+  final GlobalKey<RandomUserState> _randomUserKey = GlobalKey<RandomUserState>();
+
   // initalize home page state by initalizing our tabcontroller
   @override
   void initState() {
@@ -60,8 +63,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   void _fetchData() {
     // see which tab we are on, then get data accordingly
     if(_tabController.index == 0) {
-      print('random user fetch');
-      // deal with random user
+      _randomUserKey.currentState?.userFetchFromParent();
     } else {
       print('movies fetch');
       // deal with movies
@@ -71,8 +73,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   // function to clear the data from the current screen
   void _clearData() {
     if(_tabController.index == 0) {
-      print('random user clear');
-      // random user
+      _randomUserKey.currentState?.userClearFromParent();
     } else {
       print('movies clear');
       // movies
@@ -104,7 +105,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       body: TabBarView(
         controller: _tabController,
         children: [
-          RandomUser(),
+          RandomUser(key: _randomUserKey),
           Movies(),
         ],
       ),
