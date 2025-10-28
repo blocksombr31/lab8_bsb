@@ -13,7 +13,7 @@ class _RandomUserState extends State<RandomUser> {
   final TextEditingController _controller = TextEditingController();
 
   // create the list that will display data we fetch
-  final List<String> _users = ['Fake user here!'];
+  final List<String> _users = [];
 
   // function for actually getting data from random user website using
   // the value from our text field
@@ -39,6 +39,7 @@ class _RandomUserState extends State<RandomUser> {
           TextField(
             controller: _controller,
             onSubmitted:(value) => _getData(value),
+            decoration: InputDecoration(hintText: 'Input to fetch data here...'),
           ),
           // add some space between text field and list for easier reading
           const SizedBox(height: 10.0),
@@ -51,7 +52,10 @@ class _RandomUserState extends State<RandomUser> {
               Text (
                 textAlign: TextAlign.center,
                 'No data to display yet!',
+                style: TextStyle(
+                  fontSize: 25.0
                 ),
+              ),
             )
             :
             ListView.separated(
