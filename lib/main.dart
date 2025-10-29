@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:lab8_bsb/random_user.dart';
 import 'package:lab8_bsb/movies.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 ///
 /// Author - Brady Blocksom
@@ -9,12 +11,29 @@ import 'package:lab8_bsb/movies.dart';
 /// 
 /// Bugs - none known
 /// 
-/// Description - todo
+/// Description - This app contains two tabs, one of which allows the user
+/// to generate some number of random users which will display their name
+/// and email. The other tab allows the user to get some number of popular
+/// movies and display when it came out, the name of it, and the rating.
 /// 
-/// Reflection - todo
+/// Reflection - Most of this assignment went fairly smoothly for me. The parts
+/// that went well, went very well. The parts that I struggled with however, were
+/// rather stressful. I struggled with actually decoding/parsing information from
+/// the websites. I also struggled with putting my api key in a .env file so that
+/// it's at least hidden from github, but while doing so I kept on getting errors
+/// where the program couldn't even find the .env file.
 /// 
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // load our env file containing our api key for movies
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (e, st) {
+    print('dotenv.load failed: $e\n$st');
+  }
+
   runApp(const MainApp());
 }
 
@@ -43,8 +62,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   // tell the compiler we will give the tab controller a value
   late TabController _tabController;
 
-  // create a global key with random user so we can call functions there from here
+  // create a global key with random user and movies so we
+  // can call functions there from here
   final GlobalKey<RandomUserState> _randomUserKey = GlobalKey<RandomUserState>();
+  final GlobalKey<MoviesState> _moviesKey = GlobalKey<MoviesState>();
 
   // initalize home page state by initalizing our tabcontroller
   @override
@@ -65,8 +86,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     if(_tabController.index == 0) {
       _randomUserKey.currentState?.userFetchFromParent();
     } else {
-      print('movies fetch');
-      // deal with movies
+      _moviesKey.currentState?.moviesFetchFromParent();
     }
   }
 
@@ -75,8 +95,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     if(_tabController.index == 0) {
       _randomUserKey.currentState?.userClearFromParent();
     } else {
-      print('movies clear');
-      // movies
+      _moviesKey.currentState?.moviesClearFromParent();
     }
   }
 
@@ -106,7 +125,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         controller: _tabController,
         children: [
           RandomUser(key: _randomUserKey),
-          Movies(),
+          Movies(key: _moviesKey),
         ],
       ),
     );

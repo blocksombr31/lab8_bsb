@@ -111,8 +111,10 @@ class RandomUserState extends State<RandomUser> {
           // set the controller of our text field and call function to get data
           TextField(
             controller: _controller,
-            decoration: InputDecoration(hintText: 'Input the number of users'
-            ' you want here'),
+            decoration: InputDecoration(
+              hintText: 'Input the number of users'
+            ' you want here',
+            border: OutlineInputBorder()),
           ),
           // add some space between text field and list for easier reading
           const SizedBox(height: 10.0),
